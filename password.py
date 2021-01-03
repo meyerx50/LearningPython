@@ -1,14 +1,20 @@
 import hashlib
 import sys
+import random
 
 # This will hold the final hashed password (plain + salt)
 hashed_password = ""
 # This is the salt for hashing the password
-salt = "(?=gszAGG7"
+salt = ""
 # How often can the user try registering or logging in
 tries = 3
 # This tracks if the user is already registered
 registered = False
+# Characters available for generating a salt
+
+# Creates a salt based on the given length
+def salt_it(length):
+    return ''.join(chr(random.randint(33,126)) for i in range(length))
 
 # Hashes a given password with the global set salt
 def hash_it(password):
@@ -31,7 +37,8 @@ for x in range(tries):
     ipt_pass2 = input("One more time: ")
 
     if check_password(ipt_pass1, ipt_pass2):
-        hashed_password = hash_it(ipt_pass1)
+        salt = salt_it(16)
+        hashed_password = hash_it(ipt_pass1 + salt)
         registered = True
         break
 
@@ -42,7 +49,7 @@ if registered:
     # Give him/her a pre-determined number of chances
     for x in range(tries):
         # Correct password?
-        if check_password(hash_it(input("Password: ")), hashed_password):
+        if check_password(hash_it(input("Password: ") + salt), hashed_password):
             print("Welcome to your home banking!")
             break
         else:
