@@ -1,1 +1,2 @@
-### Test File ###
+from datetime import date
+print(date.today().weekday())
